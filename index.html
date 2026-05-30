@@ -570,6 +570,7 @@
         }
 
         /* dashboard */
+        /* NEW */
         .dash-nav {
             background: var(--black);
             color: var(--white);
@@ -578,6 +579,56 @@
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .dash-nav-right {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: 1px solid rgba(255, 255, 255, .25);
+            color: var(--white);
+            border-radius: 6px;
+            padding: .4rem .6rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        @media(max-width: 640px) {
+            .dash-nav {
+                padding: .9rem 1rem;
+                position: relative;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .dash-nav-right {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding-top: .75rem;
+                border-top: 1px solid rgba(255, 255, 255, .1);
+                margin-top: .25rem;
+                gap: .4rem;
+            }
+
+            .dash-nav-right.open {
+                display: flex;
+            }
+
+            .dash-nav-btn {
+                width: 100%;
+                text-align: center;
+                padding: .6rem 1rem;
+            }
         }
 
         .dash-nav .brand {
@@ -1296,7 +1347,7 @@
                     </div>
                     <p class="err-msg" id="loginErr">Invalid credentials. Please try again.</p>
                     <button class="login-btn" onclick="doLogin()">Sign in</button>
-                    <p class="login-hint">Create your pastor account in Supabase → Authentication → Users.</p>
+                    <!-- <p class="login-hint">Create your pastor account in Supabase → Authentication → Users.</p> -->
                 </div>
             </div>
 
@@ -1305,14 +1356,14 @@
 
                 <div class="dash-nav">
                     <div class="brand">JirehLife <span>Chapel</span> &nbsp;·&nbsp; Pastor's Dashboard</div>
-                    <div class="dash-nav-right">
+                    <!-- <button class="hamburger" onclick="toggleNav()" aria-label="Toggle menu">☰</button> -->
+                    <div class="dash-nav-right" id="dashNavRight">
                         <button class="dash-nav-btn primary" onclick="loadRows()">↻ Refresh</button>
                         <button class="dash-nav-btn" onclick="exportCSV()">Export CSV</button>
                         <button class="dash-nav-btn" onclick="openChangePw()">Change password</button>
                         <button class="dash-nav-btn" onclick="doLogout()">Sign out</button>
                     </div>
                 </div>
-
                 <div class="dash-body">
                     <div class="dash-title">Commitments Overview</div>
                     <div class="dash-sub">The Rich Church Building Campaign · JirehLife Chapel, Lapaz</div>
@@ -1725,6 +1776,11 @@
             } catch (err) {
                 await showAlert('Could not delete: ' + err.message, 'Error', '❌');
             }
+        }
+
+
+        function toggleNav() {
+            document.getElementById('dashNavRight').classList.toggle('open');
         }
 
         /* ══════════════════
