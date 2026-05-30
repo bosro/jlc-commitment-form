@@ -690,29 +690,34 @@
             background: rgba(255, 255, 255, .25)
         }
 
-        /* qr modal */
-        .qr-overlay {
+        /* modals shared */
+        .overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .7);
+            background: rgba(0, 0, 0, .65);
             z-index: 999;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
-        .qr-overlay.open {
+        .overlay.open {
             display: flex
         }
 
-        .qr-modal {
+        .modal {
             background: var(--white);
             border-radius: 14px;
             padding: 2rem;
-            text-align: center;
-            max-width: 320px;
-            width: 90%;
+            width: 100%;
             animation: fadeUp .25s ease;
+        }
+
+        /* qr modal */
+        .qr-modal {
+            max-width: 320px;
+            text-align: center
         }
 
         .qr-modal h3 {
@@ -735,16 +740,125 @@
             margin-bottom: 1rem
         }
 
-        .qr-close {
-            padding: .6rem 1.5rem;
+        .qr-actions {
+            display: flex;
+            gap: .5rem;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        .qr-btn {
+            padding: .6rem 1.25rem;
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .83rem;
+            cursor: pointer;
+            font-weight: 500;
+            border: none;
+            transition: all .2s
+        }
+
+        .qr-btn.download {
+            background: var(--black);
+            color: var(--white)
+        }
+
+        .qr-btn.download:hover {
+            opacity: .85
+        }
+
+        .qr-btn.close-btn {
+            background: var(--off-white);
+            color: var(--black);
+            border: 1px solid var(--gray-200)
+        }
+
+        .qr-btn.close-btn:hover {
+            border-color: var(--black)
+        }
+
+        /* change password modal */
+        .pw-modal {
+            max-width: 400px
+        }
+
+        .pw-modal h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: .25rem
+        }
+
+        .pw-modal .pw-sub {
+            font-size: .82rem;
+            color: var(--gray-400);
+            margin-bottom: 1.5rem;
+            line-height: 1.5
+        }
+
+        .pw-ok {
+            color: #2e7d32;
+            font-size: .78rem;
+            margin-top: .5rem;
+            display: none
+        }
+
+        .pw-actions {
+            display: flex;
+            gap: .5rem;
+            margin-top: .5rem
+        }
+
+        .pw-save {
+            flex: 1;
+            padding: .85rem;
             background: var(--black);
             color: var(--white);
             border: none;
-            border-radius: 7px;
+            border-radius: 8px;
             font-family: var(--font-body);
-            font-size: .85rem;
+            font-size: .88rem;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: 500
+            transition: opacity .2s
+        }
+
+        .pw-save:hover {
+            opacity: .85
+        }
+
+        .pw-cancel {
+            padding: .85rem 1.25rem;
+            background: var(--off-white);
+            color: var(--black);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: .88rem;
+            cursor: pointer
+        }
+
+        .pw-cancel:hover {
+            border-color: var(--black)
+        }
+
+        /* delete button in table */
+        .del-btn {
+            padding: .25rem .6rem;
+            background: transparent;
+            border: 1px solid var(--gray-200);
+            border-radius: 5px;
+            font-size: .72rem;
+            color: var(--gray-400);
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: all .2s;
+        }
+
+        .del-btn:hover {
+            border-color: #c0392b;
+            color: #c0392b;
+            background: #fdf2f2
         }
 
         /* stats */
@@ -1084,6 +1198,7 @@
                     <div class="dash-nav-right">
                         <button class="dash-nav-btn primary" onclick="loadRows()">↻ Refresh</button>
                         <button class="dash-nav-btn" onclick="exportCSV()">Export CSV</button>
+                        <button class="dash-nav-btn" onclick="openChangePw()">Change password</button>
                         <button class="dash-nav-btn" onclick="doLogout()">Sign out</button>
                     </div>
                 </div>
@@ -1155,6 +1270,7 @@
                                     <th>Period / Duration</th>
                                     <th>Payment method</th>
                                     <th>Date</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="tblBody">
@@ -1173,13 +1289,38 @@
     </div>
 
     <!-- QR MODAL -->
-    <div class="qr-overlay" id="qrOverlay" onclick="closeQR(event)">
-        <div class="qr-modal">
+    <div class="overlay" id="qrOverlay" onclick="closeQR(event)">
+        <div class="modal qr-modal">
             <h3>Member Form QR Code</h3>
             <p>Members scan this with their phone camera to open and fill the commitment form.</p>
             <canvas id="qrCanvas" width="220" height="220"></canvas>
-            <br>
-            <button class="qr-close" onclick="closeQRBtn()">Close</button>
+            <div class="qr-actions">
+                <button class="qr-btn download" onclick="downloadQR()">⬇ Download QR</button>
+                <button class="qr-btn close-btn" onclick="closeQRBtn()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHANGE PASSWORD MODAL -->
+    <div class="overlay" id="pwOverlay" onclick="closePwOverlay(event)">
+        <div class="modal pw-modal">
+            <h3>Change Password</h3>
+            <p class="pw-sub">Enter a new password for your pastor account. You'll use this next time you sign in.</p>
+            <div class="field">
+                <label>New password</label>
+                <input type="password" id="newPw" placeholder="Min. 6 characters" />
+            </div>
+            <div class="field">
+                <label>Confirm new password</label>
+                <input type="password" id="confirmPw" placeholder="Repeat password"
+                    onkeydown="if(event.key==='Enter')savePw()" />
+            </div>
+            <p class="err-msg" id="pwErr">Passwords do not match.</p>
+            <p class="pw-ok" id="pwOk">✓ Password updated successfully!</p>
+            <div class="pw-actions">
+                <button class="pw-save" onclick="savePw()">Update password</button>
+                <button class="pw-cancel" onclick="closeQRBtn2()">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -1189,7 +1330,7 @@
            ▶ PASTE YOUR SUPABASE CREDENTIALS HERE
         ════════════════════════════════════════════════ */
         const SUPA_URL = 'https://xrngexmggdaaqzuevlaf.supabase.co';   // ← replace
-        const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhybmdleG1nZ2RhYXF6dWV2bGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjMzNjIsImV4cCI6MjA5NTczOTM2Mn0.fLguvVmRdLqOYU0M3BjVWvOffjCp-RXMRLwyCByJNjY';                       // ← replace
+        const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhybmdleG1nZ2RhYXF6dWV2bGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjMzNjIsImV4cCI6MjA5NTczOTM2Mn0.fLguvVmRdLqOYU0M3BjVWvOffjCp-RXMRLwyCByJNjY';
         /* ════════════════════════════════════════════════ */
 
         let TOKEN = '', allRows = [], pledge = 'once', freq = 'weekly';
@@ -1379,6 +1520,7 @@
       <td style="color:var(--gray-400)">${esc(per)}</td>
       <td style="color:var(--gray-400);font-size:.78rem">${esc(r.payment_method || '—')}</td>
       <td style="color:var(--gray-400)">${d}</td>
+      <td><button class="del-btn" onclick="deleteRow('${r.id}','${esc(r.name || '')}')">Delete</button></td>
     </tr>`;
             }).join('');
         }
@@ -1395,21 +1537,87 @@
             });
         }
 
-        /* tiny QR generator (no external lib needed) using Google Charts API */
         function showQR() {
             const url = document.getElementById('shareUrl').textContent;
             const canvas = document.getElementById('qrCanvas');
             const ctx = canvas.getContext('2d');
             const img = new Image();
-            const encoded = encodeURIComponent(url);
             img.crossOrigin = 'anonymous';
-            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}&bgcolor=ffffff&color=0d0d0d&qzone=1`;
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=0d0d0d&qzone=1`;
             img.onload = () => { ctx.clearRect(0, 0, 220, 220); ctx.drawImage(img, 0, 0, 220, 220); };
-            img.onerror = () => { ctx.fillStyle = '#eee'; ctx.fillRect(0, 0, 220, 220); ctx.fillStyle = '#999'; ctx.font = '13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('QR unavailable', 110, 110); };
+            img.onerror = () => {
+                ctx.fillStyle = '#eee'; ctx.fillRect(0, 0, 220, 220);
+                ctx.fillStyle = '#999'; ctx.font = '13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('QR unavailable', 110, 110);
+            };
             document.getElementById('qrOverlay').classList.add('open');
         }
+
+        function downloadQR() {
+            const canvas = document.getElementById('qrCanvas');
+            const a = document.createElement('a');
+            a.download = 'jirehlife-commitment-form-qr.png';
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+        }
+
         function closeQR(e) { if (e.target === document.getElementById('qrOverlay')) closeQRBtn(); }
         function closeQRBtn() { document.getElementById('qrOverlay').classList.remove('open'); }
+
+        /* ══════════════════
+           DELETE PLEDGE
+        ══════════════════ */
+        async function deleteRow(id, name) {
+            if (!confirm(`Delete the commitment from "${name}"?\n\nThis cannot be undone.`)) return;
+            try {
+                const res = await fetch(`${SUPA_URL}/rest/v1/commitments?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + TOKEN, 'Prefer': 'return=minimal' }
+                });
+                if (!res.ok) throw new Error(await res.text());
+                allRows = allRows.filter(r => r.id !== id);
+                updateStats(); renderTable();
+            } catch (err) {
+                alert('Could not delete: ' + err.message);
+            }
+        }
+
+        /* ══════════════════
+           CHANGE PASSWORD
+        ══════════════════ */
+        function openChangePw() {
+            document.getElementById('newPw').value = '';
+            document.getElementById('confirmPw').value = '';
+            document.getElementById('pwErr').style.display = 'none';
+            document.getElementById('pwOk').style.display = 'none';
+            document.getElementById('pwOverlay').classList.add('open');
+        }
+        function closePwOverlay(e) { if (e.target === document.getElementById('pwOverlay')) closeQRBtn2(); }
+        function closeQRBtn2() { document.getElementById('pwOverlay').classList.remove('open'); }
+
+        async function savePw() {
+            const np = document.getElementById('newPw').value;
+            const cp = document.getElementById('confirmPw').value;
+            const errEl = document.getElementById('pwErr');
+            const okEl = document.getElementById('pwOk');
+            errEl.style.display = 'none'; okEl.style.display = 'none';
+            if (!np || np.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.style.display = 'block'; return; }
+            if (np !== cp) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+            try {
+                const res = await fetch(`${SUPA_URL}/auth/v1/user`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + TOKEN },
+                    body: JSON.stringify({ password: np })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.msg || data.error_description || 'Failed to update password');
+                okEl.style.display = 'block';
+                document.getElementById('newPw').value = '';
+                document.getElementById('confirmPw').value = '';
+                setTimeout(() => { okEl.style.display = 'none'; closeQRBtn2(); }, 2000);
+            } catch (err) {
+                errEl.textContent = err.message; errEl.style.display = 'block';
+            }
+        }
 
         /* ══════════════════
            EXPORT
