@@ -1,841 +1,1437 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Willing Heart — JirehLife Chapel</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --black:#0d0d0d;--white:#f9f8f6;--off-white:#f0ede8;
-  --gray-100:#ebe8e3;--gray-200:#d5d0c9;--gray-400:#9a9490;--gray-600:#5c5752;
-  --font-display:'Cormorant Garamond',serif;
-  --font-body:'DM Sans',sans-serif;
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--white);color:var(--black);min-height:100vh;font-size:15px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Willing Heart — JirehLife Chapel</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
 
-/* ── CONFIG BAR ── */
-.config-bar{
-  background:var(--black);color:rgba(255,255,255,.85);
-  padding:.75rem 1.5rem;font-size:.78rem;
-  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:space-between;
-}
-.config-bar label{color:rgba(255,255,255,.45);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
-.config-inputs{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
-.cfg-in{
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-  border-radius:4px;padding:.35rem .75rem;font-family:monospace;font-size:.75rem;
-  color:rgba(255,255,255,.85);width:230px;
-}
-.cfg-in::placeholder{color:rgba(255,255,255,.25)}
-.cfg-in:focus{outline:none;border-color:rgba(255,255,255,.4)}
-.cfg-save{
-  padding:.35rem .9rem;background:var(--white);color:var(--black);
-  border:none;border-radius:4px;font-family:var(--font-body);font-size:.75rem;
-  font-weight:600;cursor:pointer;letter-spacing:.03em;
-}
-.cfg-save:hover{background:var(--gray-100)}
-#cfgStatus{font-size:.72rem;color:rgba(255,255,255,.4);white-space:nowrap}
-#cfgStatus.ok{color:#7ec88a}
+        :root {
+            --black: #0d0d0d;
+            --white: #f9f8f6;
+            --off-white: #f0ede8;
+            --gray-100: #ebe8e3;
+            --gray-200: #d5d0c9;
+            --gray-400: #9a9490;
+            --gray-600: #5c5752;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
 
-/* ── NAV ── */
-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1.1rem 2rem;border-bottom:1px solid var(--gray-200);
-  background:var(--white);position:sticky;top:0;z-index:100;
-}
-.nav-brand{
-  font-family:var(--font-display);font-size:1.2rem;font-weight:700;
-  letter-spacing:-.01em;line-height:1;
-}
-.nav-brand span{font-weight:400;font-style:italic;color:var(--gray-400)}
-.nav-tabs{display:flex;gap:3px;background:var(--gray-100);border-radius:7px;padding:3px}
-.tab-btn{
-  padding:.45rem 1.1rem;border:none;background:transparent;border-radius:5px;
-  font-family:var(--font-body);font-size:.8rem;font-weight:500;cursor:pointer;
-  color:var(--gray-400);transition:all .2s;letter-spacing:.01em;
-}
-.tab-btn.active{background:var(--black);color:var(--white)}
+        html {
+            scroll-behavior: smooth
+        }
 
-/* ── PAGES ── */
-.page{display:none}
-.page.active{display:block;animation:fadeUp .35s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        body {
+            font-family: var(--font-body);
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            font-size: 15px
+        }
 
-/* ══════════════════════════════════
+        /* ── PAGES ── */
+        .page {
+            display: none
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeUp .35s ease
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* ══════════════════════════════════
    FORM PAGE
 ══════════════════════════════════ */
-.form-hero{
-  background:var(--black);color:var(--white);
-  padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;
-}
-.form-hero::before{
-  content:'';position:absolute;inset:0;
-  background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.03) 39px,rgba(255,255,255,.03) 40px),
-    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.03) 39px,rgba(255,255,255,.03) 40px);
-}
-.hero-inner{position:relative;z-index:1}
-.cross{font-size:1.6rem;margin-bottom:1.2rem;opacity:.6;display:block;letter-spacing:.3em}
-.form-hero h1{
-  font-family:var(--font-display);font-size:clamp(2rem,6vw,3rem);
-  font-weight:700;line-height:1.1;margin-bottom:.4rem;
-}
-.form-hero h1 em{font-style:italic;font-weight:400}
-.hero-sub{color:rgba(255,255,255,.5);font-size:.85rem;font-weight:300;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.2rem}
-.hero-verse{
-  display:inline-block;font-style:italic;font-size:.82rem;
-  color:rgba(255,255,255,.35);border-top:1px solid rgba(255,255,255,.1);
-  padding-top:.75rem;margin-top:.25rem;
-}
+        .form-hero {
+            background: var(--black);
+            color: var(--white);
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-.form-wrap{max-width:520px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+        .form-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 255, 255, .03) 39px, rgba(255, 255, 255, .03) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 255, 255, .03) 39px, rgba(255, 255, 255, .03) 40px);
+        }
 
-.section-label{
-  font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--gray-400);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;
-}
-.section-label::after{content:'';flex:1;height:1px;background:var(--gray-200)}
-.form-section{margin-bottom:2.2rem}
+        .hero-inner {
+            position: relative;
+            z-index: 1
+        }
 
-.field{margin-bottom:.9rem}
-.field label{
-  display:block;font-size:.78rem;font-weight:500;color:var(--gray-600);
-  margin-bottom:.35rem;letter-spacing:.01em;
-}
-.field input,.field select,.field textarea{
-  width:100%;padding:.72rem 1rem;border:1.5px solid var(--gray-200);
-  border-radius:7px;font-family:var(--font-body);font-size:.9rem;
-  background:var(--white);color:var(--black);transition:border-color .2s,box-shadow .2s;
-  -webkit-appearance:none;appearance:none;
-}
-.field input:focus,.field select:focus,.field textarea:focus{
-  outline:none;border-color:var(--black);box-shadow:0 0 0 3px rgba(13,13,13,.07);
-}
-.field input::placeholder{color:var(--gray-400)}
-.field input.err,.field select.err{border-color:#c0392b}
+        .cross {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            opacity: .6;
+            display: block;
+            letter-spacing: .3em
+        }
 
-/* pledge cards */
-.pledge-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.1rem}
-.pledge-card{
-  border:1.5px solid var(--gray-200);border-radius:9px;padding:1.1rem 1rem;
-  cursor:pointer;transition:all .2s;position:relative;background:var(--white);
-}
-.pledge-card:hover{border-color:var(--gray-400)}
-.pledge-card.sel{border-color:var(--black);background:var(--off-white)}
-.pledge-card h4{font-size:.88rem;font-weight:600;margin-bottom:.25rem}
-.pledge-card p{font-size:.75rem;color:var(--gray-400);line-height:1.4}
-.pledge-dot{
-  position:absolute;top:.75rem;right:.75rem;width:16px;height:16px;
-  border-radius:50%;border:1.5px solid var(--gray-200);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.55rem;transition:all .2s;
-}
-.pledge-card.sel .pledge-dot{background:var(--black);border-color:var(--black);color:var(--white)}
+        .form-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: .4rem
+        }
 
-.freq-row{display:flex;gap:6px;margin-bottom:.9rem}
-.freq-btn{
-  flex:1;padding:.55rem;border:1.5px solid var(--gray-200);border-radius:7px;
-  background:var(--white);font-family:var(--font-body);font-size:.82rem;
-  cursor:pointer;font-weight:500;color:var(--gray-600);transition:all .2s;
-}
-.freq-btn.sel{background:var(--black);color:var(--white);border-color:var(--black)}
+        .form-hero h1 em {
+            font-style: italic;
+            font-weight: 400
+        }
 
-/* bank info */
-.bank-block{
-  background:var(--off-white);border-radius:9px;padding:1.1rem 1.2rem;
-  margin-bottom:.9rem;border:1px solid var(--gray-200);
-}
-.bank-block h5{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);margin-bottom:.7rem}
-.bank-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.3rem 0;font-size:.82rem;border-bottom:1px solid var(--gray-200);
-}
-.bank-row:last-child{border:none}
-.bank-row .lbl{color:var(--gray-600)}
-.bank-row .val{font-family:monospace;font-weight:600;font-size:.8rem}
+        .hero-sub {
+            color: rgba(255, 255, 255, .5);
+            font-size: .85rem;
+            font-weight: 300;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem
+        }
 
-/* consent */
-.consent{
-  display:flex;gap:.75rem;align-items:flex-start;
-  padding:1rem 1.1rem;border:1.5px solid var(--gray-200);border-radius:9px;
-  margin-bottom:1.5rem;cursor:pointer;transition:border-color .2s;
-  background:var(--white);
-}
-.consent:hover{border-color:var(--gray-400)}
-.consent.checked{border-color:var(--black);background:var(--off-white)}
-.consent input[type=checkbox]{
-  width:17px;height:17px;flex-shrink:0;margin-top:2px;
-  accent-color:var(--black);cursor:pointer;
-}
-.consent span{font-size:.82rem;line-height:1.6;color:var(--gray-600)}
-.consent strong{color:var(--black)}
+        .hero-verse {
+            display: inline-block;
+            font-style: italic;
+            font-size: .82rem;
+            color: rgba(255, 255, 255, .35);
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            padding-top: .75rem;
+            margin-top: .25rem
+        }
 
-.submit-btn{
-  width:100%;padding:1.1rem;background:var(--black);color:var(--white);
-  border:none;border-radius:9px;font-family:var(--font-body);font-size:.95rem;
-  font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;
-  letter-spacing:.03em;
-}
-.submit-btn:hover{opacity:.88}
-.submit-btn:active{transform:scale(.99)}
-.submit-btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+        .form-wrap {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem
+        }
 
-.form-footer{text-align:center;font-size:.75rem;color:var(--gray-400);margin-top:1rem;line-height:1.7}
-.form-footer strong{color:var(--gray-600)}
+        .section-label {
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
 
-/* success */
-.success{
-  display:none;text-align:center;padding:5rem 2rem;
-  animation:fadeUp .4s ease;
-}
-.success .big-cross{font-size:2.5rem;display:block;margin-bottom:1.5rem;opacity:.25}
-.success h2{font-family:var(--font-display);font-size:2.2rem;font-weight:700;margin-bottom:.75rem}
-.success p{color:var(--gray-400);font-size:.88rem;max-width:300px;margin:0 auto 1.5rem;line-height:1.6}
-.success .verse-line{
-  font-style:italic;font-size:.82rem;color:var(--gray-400);
-  border-top:1px solid var(--gray-200);padding-top:1rem;
-  display:inline-block;
-}
-.another-btn{
-  margin-top:1.75rem;padding:.7rem 2rem;border:1.5px solid var(--black);
-  border-radius:7px;background:transparent;font-family:var(--font-body);
-  font-size:.85rem;cursor:pointer;font-weight:500;transition:all .2s;
-}
-.another-btn:hover{background:var(--black);color:var(--white)}
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200)
+        }
 
-/* ══════════════════════════════════
+        .form-section {
+            margin-bottom: 2.2rem
+        }
+
+        .field {
+            margin-bottom: .9rem
+        }
+
+        .field label {
+            display: block;
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: .35rem;
+            letter-spacing: .01em
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: .72rem 1rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .9rem;
+            background: var(--white);
+            color: var(--black);
+            transition: border-color .2s, box-shadow .2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            outline: none;
+            border-color: var(--black);
+            box-shadow: 0 0 0 3px rgba(13, 13, 13, .07)
+        }
+
+        .field input::placeholder {
+            color: var(--gray-400)
+        }
+
+        .pledge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 1.1rem
+        }
+
+        .pledge-card {
+            border: 1.5px solid var(--gray-200);
+            border-radius: 9px;
+            padding: 1.1rem 1rem;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+            background: var(--white)
+        }
+
+        .pledge-card:hover {
+            border-color: var(--gray-400)
+        }
+
+        .pledge-card.sel {
+            border-color: var(--black);
+            background: var(--off-white)
+        }
+
+        .pledge-card h4 {
+            font-size: .88rem;
+            font-weight: 600;
+            margin-bottom: .25rem
+        }
+
+        .pledge-card p {
+            font-size: .75rem;
+            color: var(--gray-400);
+            line-height: 1.4
+        }
+
+        .pledge-dot {
+            position: absolute;
+            top: .75rem;
+            right: .75rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1.5px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .55rem;
+            transition: all .2s
+        }
+
+        .pledge-card.sel .pledge-dot {
+            background: var(--black);
+            border-color: var(--black);
+            color: var(--white)
+        }
+
+        .freq-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: .9rem
+        }
+
+        .freq-btn {
+            flex: 1;
+            padding: .55rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 7px;
+            background: var(--white);
+            font-family: var(--font-body);
+            font-size: .82rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all .2s
+        }
+
+        .freq-btn.sel {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black)
+        }
+
+        .bank-block {
+            background: var(--off-white);
+            border-radius: 9px;
+            padding: 1.1rem 1.2rem;
+            margin-bottom: .9rem;
+            border: 1px solid var(--gray-200)
+        }
+
+        .bank-block h5 {
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            margin-bottom: .7rem
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .3rem 0;
+            font-size: .82rem;
+            border-bottom: 1px solid var(--gray-200)
+        }
+
+        .bank-row:last-child {
+            border: none
+        }
+
+        .bank-row .lbl {
+            color: var(--gray-600)
+        }
+
+        .bank-row .val {
+            font-family: monospace;
+            font-weight: 600;
+            font-size: .8rem
+        }
+
+        .consent {
+            display: flex;
+            gap: .75rem;
+            align-items: flex-start;
+            padding: 1rem 1.1rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 9px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: border-color .2s;
+            background: var(--white)
+        }
+
+        .consent:hover {
+            border-color: var(--gray-400)
+        }
+
+        .consent.checked {
+            border-color: var(--black);
+            background: var(--off-white)
+        }
+
+        .consent input[type=checkbox] {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            accent-color: var(--black);
+            cursor: pointer
+        }
+
+        .consent span {
+            font-size: .82rem;
+            line-height: 1.6;
+            color: var(--gray-600)
+        }
+
+        .consent strong {
+            color: var(--black)
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 9px;
+            font-family: var(--font-body);
+            font-size: .95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity .2s, transform .1s;
+            letter-spacing: .03em
+        }
+
+        .submit-btn:hover {
+            opacity: .88
+        }
+
+        .submit-btn:active {
+            transform: scale(.99)
+        }
+
+        .submit-btn:disabled {
+            opacity: .38;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .form-footer {
+            text-align: center;
+            font-size: .75rem;
+            color: var(--gray-400);
+            margin-top: 1rem;
+            line-height: 1.7
+        }
+
+        .form-footer strong {
+            color: var(--gray-600)
+        }
+
+        .success {
+            display: none;
+            text-align: center;
+            padding: 5rem 2rem;
+            animation: fadeUp .4s ease
+        }
+
+        .success .big-cross {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 1.5rem;
+            opacity: .25
+        }
+
+        .success h2 {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: .75rem
+        }
+
+        .success p {
+            color: var(--gray-400);
+            font-size: .88rem;
+            max-width: 300px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6
+        }
+
+        .success .verse-line {
+            font-style: italic;
+            font-size: .82rem;
+            color: var(--gray-400);
+            border-top: 1px solid var(--gray-200);
+            padding-top: 1rem;
+            display: inline-block
+        }
+
+        .another-btn {
+            margin-top: 1.75rem;
+            padding: .7rem 2rem;
+            border: 1.5px solid var(--black);
+            border-radius: 7px;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: .85rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all .2s
+        }
+
+        .another-btn:hover {
+            background: var(--black);
+            color: var(--white)
+        }
+
+        /* ══════════════════════════════════
    ADMIN PAGE
 ══════════════════════════════════ */
-.admin-login{
-  max-width:380px;margin:5rem auto;padding:2.5rem 2rem;
-  border:1px solid var(--gray-200);border-radius:12px;
-  background:var(--white);
-}
-.admin-login h2{font-family:var(--font-display);font-size:1.9rem;font-weight:700;margin-bottom:.25rem}
-.admin-login .sub{color:var(--gray-400);font-size:.83rem;margin-bottom:2rem;line-height:1.5}
-.err-msg{color:#c0392b;font-size:.78rem;margin-top:.5rem;display:none}
-.login-btn{
-  width:100%;margin-top:.25rem;padding:.85rem;background:var(--black);color:var(--white);
-  border:none;border-radius:8px;font-family:var(--font-body);font-size:.88rem;
-  font-weight:600;cursor:pointer;transition:opacity .2s;
-}
-.login-btn:hover{opacity:.85}
-.login-hint{font-size:.72rem;color:var(--gray-400);margin-top:1.25rem;text-align:center;line-height:1.6}
+        .admin-wrap {
+            min-height: 100vh;
+            background: var(--off-white);
+            display: flex;
+            flex-direction: column
+        }
 
-/* dashboard */
-.dash{padding:2rem;max-width:1100px;margin:0 auto}
-.dash-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap}
-.dash-hd h2{font-family:var(--font-display);font-size:1.8rem;font-weight:700}
-.dash-hd .dsub{font-size:.8rem;color:var(--gray-400);margin-top:.2rem}
-.dash-hd-btns{display:flex;gap:.5rem}
-.dash-btn{
-  padding:.5rem 1rem;border-radius:7px;font-family:var(--font-body);font-size:.8rem;
-  font-weight:500;cursor:pointer;border:1px solid var(--gray-200);
-  background:var(--white);color:var(--gray-600);transition:all .2s;
-}
-.dash-btn:hover{border-color:var(--black)}
-.dash-btn.primary{background:var(--black);color:var(--white);border-color:var(--black)}
-.dash-btn.primary:hover{opacity:.85}
+        .admin-login-screen {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.75rem}
-.stat{background:var(--off-white);border-radius:9px;padding:1.1rem 1.25rem;border:1px solid var(--gray-200)}
-.stat .s-lbl{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:.4rem}
-.stat .s-val{font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1}
-.stat .s-sub{font-size:.72rem;color:var(--gray-400);margin-top:.3rem}
+        .login-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 380px;
+        }
 
-.filter-bar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
-.srch{
-  flex:1;min-width:160px;padding:.55rem 1rem;border:1.5px solid var(--gray-200);
-  border-radius:7px;font-family:var(--font-body);font-size:.83rem;
-}
-.srch:focus{outline:none;border-color:var(--black)}
-.fil-sel{
-  padding:.55rem .9rem;border:1.5px solid var(--gray-200);border-radius:7px;
-  font-family:var(--font-body);font-size:.8rem;color:var(--gray-600);
-  background:var(--white);-webkit-appearance:none;appearance:none;
-  cursor:pointer;
-}
-.fil-sel:focus{outline:none;border-color:var(--black)}
+        .login-card .brand {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: .25rem;
+            color: var(--gray-400);
+        }
 
-.tbl-wrap{overflow-x:auto;border:1px solid var(--gray-200);border-radius:9px}
-table{width:100%;border-collapse:collapse}
-thead tr{background:var(--off-white)}
-th{
-  padding:.7rem 1rem;text-align:left;font-size:.68rem;font-weight:600;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);
-  border-bottom:1px solid var(--gray-200);white-space:nowrap;
-}
-td{
-  padding:.8rem 1rem;font-size:.83rem;border-bottom:1px solid var(--gray-100);
-  vertical-align:middle;
-}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--off-white)}
-.badge{
-  display:inline-block;padding:.2rem .6rem;border-radius:4px;
-  font-size:.7rem;font-weight:600;letter-spacing:.04em;
-}
-.badge-once{background:#e8edf7;color:#1a3a8f}
-.badge-rec{background:#e8f2ea;color:#1a5c2a}
-.empty{text-align:center;padding:3rem;color:var(--gray-400);font-size:.85rem}
-.row-count{font-size:.72rem;color:var(--gray-400);margin-top:.6rem;text-align:right}
+        .login-card h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: .25rem
+        }
 
-/* QR hint banner */
-.qr-banner{
-  background:var(--off-white);border:1px solid var(--gray-200);border-radius:9px;
-  padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;
-  font-size:.82rem;color:var(--gray-600);flex-wrap:wrap;
-}
-.qr-banner strong{color:var(--black)}
-.qr-url{
-  font-family:monospace;font-size:.78rem;background:var(--white);
-  border:1px solid var(--gray-200);border-radius:5px;
-  padding:.3rem .75rem;flex:1;min-width:200px;color:var(--gray-600);
-  user-select:all;
-}
-.copy-btn{
-  padding:.35rem .9rem;background:var(--black);color:var(--white);border:none;
-  border-radius:5px;font-family:var(--font-body);font-size:.75rem;cursor:pointer;
-  font-weight:500;white-space:nowrap;
-}
-.copy-btn:hover{opacity:.8}
+        .login-card .sub {
+            color: var(--gray-400);
+            font-size: .83rem;
+            margin-bottom: 2rem;
+            line-height: 1.5
+        }
 
-@media(max-width:640px){
-  nav{padding:.9rem 1rem}
-  .stats{grid-template-columns:1fr 1fr}
-  .dash{padding:1rem}
-  .pledge-grid{grid-template-columns:1fr}
-  .admin-login{margin:2rem 1rem}
-}
-</style>
+        .err-msg {
+            color: #c0392b;
+            font-size: .78rem;
+            margin-top: .5rem;
+            display: none
+        }
+
+        .login-btn {
+            width: 100%;
+            margin-top: .25rem;
+            padding: .9rem;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity .2s;
+            letter-spacing: .02em
+        }
+
+        .login-btn:hover {
+            opacity: .85
+        }
+
+        .login-hint {
+            font-size: .72rem;
+            color: var(--gray-400);
+            margin-top: 1.25rem;
+            text-align: center;
+            line-height: 1.6
+        }
+
+        /* dashboard */
+        .dash-nav {
+            background: var(--black);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .dash-nav .brand {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700
+        }
+
+        .dash-nav .brand span {
+            font-weight: 400;
+            font-style: italic;
+            opacity: .5
+        }
+
+        .dash-nav-right {
+            display: flex;
+            gap: .5rem
+        }
+
+        .dash-nav-btn {
+            padding: .45rem 1rem;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: .8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, .2);
+            background: transparent;
+            color: rgba(255, 255, 255, .8);
+            transition: all .2s
+        }
+
+        .dash-nav-btn:hover {
+            border-color: rgba(255, 255, 255, .6);
+            color: var(--white)
+        }
+
+        .dash-nav-btn.primary {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white)
+        }
+
+        .dash-nav-btn.primary:hover {
+            opacity: .85
+        }
+
+        .dash-body {
+            padding: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%
+        }
+
+        .dash-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: .2rem
+        }
+
+        .dash-sub {
+            font-size: .8rem;
+            color: var(--gray-400);
+            margin-bottom: 1.75rem
+        }
+
+        /* share card */
+        .share-card {
+            background: var(--black);
+            color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .share-card .sc-label {
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            opacity: .5;
+            margin-bottom: .4rem
+        }
+
+        .share-card .sc-url {
+            font-family: monospace;
+            font-size: .85rem;
+            background: rgba(255, 255, 255, .1);
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: 6px;
+            padding: .5rem 1rem;
+            flex: 1;
+            min-width: 220px;
+            color: rgba(255, 255, 255, .85);
+            word-break: break-all;
+        }
+
+        .share-actions {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap
+        }
+
+        .sc-btn {
+            padding: .5rem 1.1rem;
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+            white-space: nowrap;
+        }
+
+        .sc-btn.copy {
+            background: var(--white);
+            color: var(--black)
+        }
+
+        .sc-btn.copy:hover {
+            opacity: .85
+        }
+
+        .sc-btn.qr {
+            background: rgba(255, 255, 255, .15);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, .25)
+        }
+
+        .sc-btn.qr:hover {
+            background: rgba(255, 255, 255, .25)
+        }
+
+        /* qr modal */
+        .qr-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-overlay.open {
+            display: flex
+        }
+
+        .qr-modal {
+            background: var(--white);
+            border-radius: 14px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 320px;
+            width: 90%;
+            animation: fadeUp .25s ease;
+        }
+
+        .qr-modal h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: .5rem
+        }
+
+        .qr-modal p {
+            font-size: .8rem;
+            color: var(--gray-400);
+            margin-bottom: 1.25rem;
+            line-height: 1.5
+        }
+
+        #qrCanvas {
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 1rem
+        }
+
+        .qr-close {
+            padding: .6rem 1.5rem;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .85rem;
+            cursor: pointer;
+            font-weight: 500
+        }
+
+        /* stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 1.75rem
+        }
+
+        .stat {
+            background: var(--white);
+            border-radius: 9px;
+            padding: 1.1rem 1.25rem;
+            border: 1px solid var(--gray-200)
+        }
+
+        .stat .s-lbl {
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            margin-bottom: .4rem
+        }
+
+        .stat .s-val {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1
+        }
+
+        .stat .s-sub {
+            font-size: .72rem;
+            color: var(--gray-400);
+            margin-top: .3rem
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: .5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap
+        }
+
+        .srch {
+            flex: 1;
+            min-width: 160px;
+            padding: .55rem 1rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .83rem;
+            background: var(--white)
+        }
+
+        .srch:focus {
+            outline: none;
+            border-color: var(--black)
+        }
+
+        .fil-sel {
+            padding: .55rem .9rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .8rem;
+            color: var(--gray-600);
+            background: var(--white);
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer
+        }
+
+        .fil-sel:focus {
+            outline: none;
+            border-color: var(--black)
+        }
+
+        .tbl-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: 9px;
+            background: var(--white)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        thead tr {
+            background: var(--off-white)
+        }
+
+        th {
+            padding: .7rem 1rem;
+            text-align: left;
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            border-bottom: 1px solid var(--gray-200);
+            white-space: nowrap
+        }
+
+        td {
+            padding: .8rem 1rem;
+            font-size: .83rem;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle
+        }
+
+        tr:last-child td {
+            border-bottom: none
+        }
+
+        tr:hover td {
+            background: var(--off-white)
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .2rem .6rem;
+            border-radius: 4px;
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .04em
+        }
+
+        .badge-once {
+            background: #e8edf7;
+            color: #1a3a8f
+        }
+
+        .badge-rec {
+            background: #e8f2ea;
+            color: #1a5c2a
+        }
+
+        .empty {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-400);
+            font-size: .85rem
+        }
+
+        .row-count {
+            font-size: .72rem;
+            color: var(--gray-400);
+            margin-top: .6rem;
+            text-align: right
+        }
+
+        @media(max-width:640px) {
+            .stats {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .dash-body {
+                padding: 1rem
+            }
+
+            .pledge-grid {
+                grid-template-columns: 1fr
+            }
+
+            .share-card {
+                flex-direction: column;
+                align-items: flex-start
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- CONFIG BAR -->
-<div class="config-bar">
-  <div class="config-inputs">
-    <label>Supabase URL</label>
-    <input class="cfg-in" id="cfgUrl" placeholder="https://xxxx.supabase.co" />
-    <label>Anon Key</label>
-    <input class="cfg-in" id="cfgKey" placeholder="eyJhbGciOiJIUzI1NiIs..." />
-    <button class="cfg-save" onclick="saveConfig()">Save &amp; connect</button>
-  </div>
-  <span id="cfgStatus">Not connected</span>
-</div>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-brand">JirehLife <span>Chapel</span></div>
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="showPage('form',this)">Commitment Form</button>
-    <button class="tab-btn" onclick="showPage('admin',this)">Pastor's Dashboard</button>
-  </div>
-</nav>
-
-<!-- ═══════════════════════════
-     FORM PAGE
+    <!-- ═══════════════════════════
+     FORM PAGE (default)
 ════════════════════════════ -->
-<div class="page active" id="formPage">
+    <div class="page active" id="formPage">
 
-  <div id="successMsg" class="success">
-    <span class="big-cross">✝</span>
-    <h2>Commitment Received</h2>
-    <p>Thank you for your willing heart. Your commitment has been recorded and received with gratitude.</p>
-    <div class="verse-line">"God loves a cheerful giver." — 2 Corinthians 9:7</div>
-    <br>
-    <button class="another-btn" onclick="resetForm()">Submit another commitment</button>
-  </div>
-
-  <div id="mainForm">
-    <div class="form-hero">
-      <div class="hero-inner">
-        <span class="cross">✝</span>
-        <p class="hero-sub">JirehLife Chapel · Building Campaign</p>
-        <h1><em>My Willing Heart</em><br>Commitment Card</h1>
-        <div class="hero-verse">"The Lord needs it." — Luke 19:34</div>
-      </div>
-    </div>
-
-    <div class="form-wrap">
-
-      <!-- Personal details -->
-      <div class="form-section">
-        <div class="section-label">Your details</div>
-        <div class="field">
-          <label>Full name <span style="color:#c0392b">*</span></label>
-          <input type="text" id="fname" placeholder="e.g. Kwame Asante" autocomplete="name" />
-        </div>
-        <div class="field">
-          <label>Phone / Contact <span style="color:#c0392b">*</span></label>
-          <input type="tel" id="fcontact" placeholder="e.g. 0244 123 456" autocomplete="tel" />
-        </div>
-      </div>
-
-      <!-- Pledge type -->
-      <div class="form-section">
-        <div class="section-label">My commitment</div>
-        <div class="pledge-grid">
-          <div class="pledge-card sel" id="cardOnce" onclick="selectPledge('once')">
-            <h4>One-time gift</h4>
-            <p>A single contribution to the campaign</p>
-            <div class="pledge-dot">✓</div>
-          </div>
-          <div class="pledge-card" id="cardRec" onclick="selectPledge('recurring')">
-            <h4>Weekly / Monthly pledge</h4>
-            <p>Regular giving over a set period</p>
-            <div class="pledge-dot"></div>
-          </div>
+        <div id="successMsg" class="success">
+            <span class="big-cross">✝</span>
+            <h2>Commitment Received</h2>
+            <p>Thank you for your willing heart. Your commitment has been recorded and received with gratitude.</p>
+            <div class="verse-line">"God loves a cheerful giver." — 2 Corinthians 9:7</div>
+            <br>
+            <button class="another-btn" onclick="resetForm()">Submit another commitment</button>
         </div>
 
-        <!-- one-time amount -->
-        <div id="onceFields">
-          <div class="field">
-            <label>Amount (GHS) <span style="color:#c0392b">*</span></label>
-            <input type="number" id="onceAmt" placeholder="0.00" min="1" />
-          </div>
-        </div>
-
-        <!-- recurring -->
-        <div id="recFields" style="display:none">
-          <div class="field">
-            <label>Amount per period (GHS) <span style="color:#c0392b">*</span></label>
-            <input type="number" id="recAmt" placeholder="0.00" min="1" />
-          </div>
-          <div class="field">
-            <label>Frequency <span style="color:#c0392b">*</span></label>
-            <div class="freq-row">
-              <button class="freq-btn sel" id="freqW" onclick="selectFreq('weekly')">Weekly</button>
-              <button class="freq-btn" id="freqM" onclick="selectFreq('monthly')">Monthly</button>
+        <div id="mainForm">
+            <div class="form-hero">
+                <div class="hero-inner">
+                    <span class="cross">✝</span>
+                    <p class="hero-sub">JirehLife Chapel · Building Campaign</p>
+                    <h1><em>My Willing Heart</em><br>Commitment Card</h1>
+                    <div class="hero-verse">"The Lord needs it." — Luke 19:34</div>
+                </div>
             </div>
-          </div>
-          <div class="field">
-            <label>Number of <span id="freqLabel">weeks</span> <span style="color:#c0392b">*</span></label>
-            <input type="number" id="recDur" placeholder="e.g. 12" min="1" />
-          </div>
+
+            <div class="form-wrap">
+
+                <div class="form-section">
+                    <div class="section-label">Your details</div>
+                    <div class="field">
+                        <label>Full name <span style="color:#c0392b">*</span></label>
+                        <input type="text" id="fname" placeholder="e.g. Kwame Asante" autocomplete="name" />
+                    </div>
+                    <div class="field">
+                        <label>Phone / Contact <span style="color:#c0392b">*</span></label>
+                        <input type="tel" id="fcontact" placeholder="e.g. 0244 123 456" autocomplete="tel" />
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">My commitment</div>
+                    <div class="pledge-grid">
+                        <div class="pledge-card sel" id="cardOnce" onclick="selectPledge('once')">
+                            <h4>One-time gift</h4>
+                            <p>A single contribution to the campaign</p>
+                            <div class="pledge-dot">✓</div>
+                        </div>
+                        <div class="pledge-card" id="cardRec" onclick="selectPledge('recurring')">
+                            <h4>Weekly / Monthly pledge</h4>
+                            <p>Regular giving over a set period</p>
+                            <div class="pledge-dot"></div>
+                        </div>
+                    </div>
+
+                    <div id="onceFields">
+                        <div class="field">
+                            <label>Amount (GHS) <span style="color:#c0392b">*</span></label>
+                            <input type="number" id="onceAmt" placeholder="0.00" min="1" />
+                        </div>
+                    </div>
+
+                    <div id="recFields" style="display:none">
+                        <div class="field">
+                            <label>Amount per period (GHS) <span style="color:#c0392b">*</span></label>
+                            <input type="number" id="recAmt" placeholder="0.00" min="1" />
+                        </div>
+                        <div class="field">
+                            <label>Frequency <span style="color:#c0392b">*</span></label>
+                            <div class="freq-row">
+                                <button class="freq-btn sel" id="freqW" onclick="selectFreq('weekly')">Weekly</button>
+                                <button class="freq-btn" id="freqM" onclick="selectFreq('monthly')">Monthly</button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Number of <span id="freqLabel">weeks</span> <span
+                                    style="color:#c0392b">*</span></label>
+                            <input type="number" id="recDur" placeholder="e.g. 12" min="1" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Payment channels</div>
+                    <div class="bank-block">
+                        <h5>Bank Transfer</h5>
+                        <div class="bank-row"><span class="lbl">Bank</span><span class="val">GT Bank</span></div>
+                        <div class="bank-row"><span class="lbl">Account number</span><span
+                                class="val">3224001020021</span></div>
+                        <div class="bank-row"><span class="lbl">Account name</span><span class="val">JirehLife Chapel —
+                                Lapaz</span></div>
+                    </div>
+                    <div class="bank-block">
+                        <h5>Mobile Money (MTN)</h5>
+                        <div class="bank-row"><span class="lbl">General Giving</span><span class="val">0245 770
+                                206</span></div>
+                        <div class="bank-row"><span class="lbl">JirehLife Chapel</span><span class="val">0245 770
+                                415</span></div>
+                    </div>
+                    <div class="field" style="margin-top:.5rem">
+                        <label>Preferred payment method</label>
+                        <select id="fpay">
+                            <option value="">— select one —</option>
+                            <option>Bank Transfer — GT Bank (3224001020021)</option>
+                            <option>Mobile Money — 0245 770 206 (General)</option>
+                            <option>Mobile Money — 0245 770 415 (JirehLife)</option>
+                            <option>Cash / Offering Box</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="consent" id="consentBox" onclick="toggleConsent()">
+                    <input type="checkbox" id="fConsent" />
+                    <span>I have a willing heart and commit to participate in <strong>"The Rich Church"</strong>
+                        building campaign. I understand this is a faith commitment to God and to this church.</span>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit My Commitment &nbsp;✝</button>
+                <div class="form-footer">
+                    Questions? Call <strong>0244 564 343</strong> or <strong>0245 770 206</strong>
+                </div>
+
+            </div>
         </div>
-      </div>
-
-      <!-- Payment channels -->
-      <div class="form-section">
-        <div class="section-label">Payment channels</div>
-        <div class="bank-block">
-          <h5>Bank Transfer</h5>
-          <div class="bank-row"><span class="lbl">Bank</span><span class="val">GT Bank</span></div>
-          <div class="bank-row"><span class="lbl">Account number</span><span class="val">3224001020021</span></div>
-          <div class="bank-row"><span class="lbl">Account name</span><span class="val">JirehLife Chapel — Lapaz</span></div>
-        </div>
-        <div class="bank-block">
-          <h5>Mobile Money (MTN)</h5>
-          <div class="bank-row"><span class="lbl">General Giving</span><span class="val">0245 770 206</span></div>
-          <div class="bank-row"><span class="lbl">JirehLife Chapel</span><span class="val">0245 770 415</span></div>
-        </div>
-        <div class="field" style="margin-top:.5rem">
-          <label>Preferred payment method</label>
-          <select id="fpay">
-            <option value="">— select one —</option>
-            <option>Bank Transfer — GT Bank (3224001020021)</option>
-            <option>Mobile Money — 0245 770 206 (General)</option>
-            <option>Mobile Money — 0245 770 415 (JirehLife)</option>
-            <option>Cash / Offering Box</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Consent -->
-      <div class="consent" id="consentBox" onclick="toggleConsent()">
-        <input type="checkbox" id="fConsent" />
-        <span>I have a willing heart and commit to participate in <strong>"The Rich Church"</strong> building campaign. I understand this is a faith commitment to God and to this church.</span>
-      </div>
-
-      <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit My Commitment &nbsp;✝</button>
-      <div class="form-footer">
-        Questions? Call <strong>0244 564 343</strong> or <strong>0245 770 206</strong>
-      </div>
-
-    </div><!-- /form-wrap -->
-  </div><!-- /mainForm -->
-</div><!-- /formPage -->
+    </div>
 
 
-<!-- ═══════════════════════════
-     ADMIN PAGE
+    <!-- ═══════════════════════════
+     ADMIN PAGE (?admin in URL)
 ════════════════════════════ -->
-<div class="page" id="adminPage">
+    <div class="page" id="adminPage">
+        <div class="admin-wrap">
 
-  <!-- LOGIN -->
-  <div id="adminLogin">
-    <div class="admin-login">
-      <h2>Pastor's Dashboard</h2>
-      <p class="sub">Sign in to view and monitor all commitment submissions from members.</p>
-      <div class="field">
-        <label>Email address</label>
-        <input type="email" id="aEmail" placeholder="pastor@jirehlife.org" />
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input type="password" id="aPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
-      </div>
-      <p class="err-msg" id="loginErr">Invalid credentials. Please try again.</p>
-      <button class="login-btn" onclick="doLogin()">Sign in</button>
-      <p class="login-hint">
-        Use the credentials you set up in Supabase Auth.<br>
-        First time? Go to Supabase → Authentication → Users → Add user.
-      </p>
+            <!-- LOGIN -->
+            <div id="adminLoginScreen" class="admin-login-screen">
+                <div class="login-card">
+                    <div class="brand">JirehLife Chapel</div>
+                    <h2>Pastor's Dashboard</h2>
+                    <p class="sub">Sign in to monitor commitments, generate the member link, and export data.</p>
+                    <div class="field">
+                        <label>Email address</label>
+                        <input type="email" id="aEmail" placeholder="pastor@jirehlife.org" />
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <input type="password" id="aPass" placeholder="••••••••"
+                            onkeydown="if(event.key==='Enter')doLogin()" />
+                    </div>
+                    <p class="err-msg" id="loginErr">Invalid credentials. Please try again.</p>
+                    <button class="login-btn" onclick="doLogin()">Sign in</button>
+                    <p class="login-hint">Create your pastor account in Supabase → Authentication → Users.</p>
+                </div>
+            </div>
+
+            <!-- DASHBOARD -->
+            <div id="adminDash" style="display:none;flex-direction:column;flex:1">
+
+                <div class="dash-nav">
+                    <div class="brand">JirehLife <span>Chapel</span> &nbsp;·&nbsp; Pastor's Dashboard</div>
+                    <div class="dash-nav-right">
+                        <button class="dash-nav-btn primary" onclick="loadRows()">↻ Refresh</button>
+                        <button class="dash-nav-btn" onclick="exportCSV()">Export CSV</button>
+                        <button class="dash-nav-btn" onclick="doLogout()">Sign out</button>
+                    </div>
+                </div>
+
+                <div class="dash-body">
+                    <div class="dash-title">Commitments Overview</div>
+                    <div class="dash-sub">The Rich Church Building Campaign · JirehLife Chapel, Lapaz</div>
+
+                    <!-- SHARE CARD -->
+                    <div class="share-card">
+                        <div style="flex:1;min-width:200px">
+                            <div class="sc-label">Member form link — share this or generate a QR code</div>
+                            <div class="sc-url" id="shareUrl">—</div>
+                        </div>
+                        <div class="share-actions">
+                            <button class="sc-btn copy" onclick="copyLink()">Copy link</button>
+                            <button class="sc-btn qr" onclick="showQR()">Generate QR code</button>
+                        </div>
+                    </div>
+
+                    <!-- STATS -->
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="s-lbl">Total commitments</div>
+                            <div class="s-val" id="sTot">—</div>
+                        </div>
+                        <div class="stat">
+                            <div class="s-lbl">Total pledged (GHS)</div>
+                            <div class="s-val" id="sAmt">—</div>
+                        </div>
+                        <div class="stat">
+                            <div class="s-lbl">One-time gifts</div>
+                            <div class="s-val" id="sOnce">—</div>
+                        </div>
+                        <div class="stat">
+                            <div class="s-lbl">Recurring pledges</div>
+                            <div class="s-val" id="sRec">—</div>
+                        </div>
+                    </div>
+
+                    <!-- FILTERS -->
+                    <div class="filter-bar">
+                        <input class="srch" id="srchBox" placeholder="Search by name or phone…"
+                            oninput="renderTable()" />
+                        <select class="fil-sel" id="typeF" onchange="renderTable()">
+                            <option value="">All types</option>
+                            <option value="once">One-time</option>
+                            <option value="recurring">Recurring</option>
+                        </select>
+                        <select class="fil-sel" id="payF" onchange="renderTable()">
+                            <option value="">All payment methods</option>
+                            <option>Bank Transfer — GT Bank (3224001020021)</option>
+                            <option>Mobile Money — 0245 770 206 (General)</option>
+                            <option>Mobile Money — 0245 770 415 (JirehLife)</option>
+                            <option>Cash / Offering Box</option>
+                        </select>
+                    </div>
+
+                    <!-- TABLE -->
+                    <div class="tbl-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Contact</th>
+                                    <th>Type</th>
+                                    <th>Amount (GHS)</th>
+                                    <th>Period / Duration</th>
+                                    <th>Payment method</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblBody">
+                                <tr>
+                                    <td colspan="8" class="empty">Loading…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row-count" id="rowCount"></div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
 
-  <!-- DASHBOARD -->
-  <div id="adminDash" style="display:none">
-    <div class="dash">
-
-      <div class="dash-hd">
-        <div>
-          <h2>Commitments Overview</h2>
-          <div class="dsub">The Rich Church Building Campaign · JirehLife Chapel, Lapaz</div>
+    <!-- QR MODAL -->
+    <div class="qr-overlay" id="qrOverlay" onclick="closeQR(event)">
+        <div class="qr-modal">
+            <h3>Member Form QR Code</h3>
+            <p>Members scan this with their phone camera to open and fill the commitment form.</p>
+            <canvas id="qrCanvas" width="220" height="220"></canvas>
+            <br>
+            <button class="qr-close" onclick="closeQRBtn()">Close</button>
         </div>
-        <div class="dash-hd-btns">
-          <button class="dash-btn primary" onclick="loadRows()">↻ Refresh</button>
-          <button class="dash-btn" onclick="exportCSV()">Export CSV</button>
-          <button class="dash-btn" onclick="doLogout()">Sign out</button>
-        </div>
-      </div>
-
-      <!-- QR / link banner -->
-      <div class="qr-banner">
-        <span>📎 <strong>Share form link with members:</strong></span>
-        <span class="qr-url" id="shareUrl">Loading…</span>
-        <button class="copy-btn" onclick="copyLink()">Copy link</button>
-        <span style="font-size:.75rem;color:var(--gray-400)">Use a QR generator (e.g. qr-code-generator.com) with this URL to print or share.</span>
-      </div>
-
-      <!-- Stats -->
-      <div class="stats">
-        <div class="stat">
-          <div class="s-lbl">Total commitments</div>
-          <div class="s-val" id="sTot">—</div>
-        </div>
-        <div class="stat">
-          <div class="s-lbl">Total pledged (GHS)</div>
-          <div class="s-val" id="sAmt">—</div>
-        </div>
-        <div class="stat">
-          <div class="s-lbl">One-time gifts</div>
-          <div class="s-val" id="sOnce">—</div>
-        </div>
-        <div class="stat">
-          <div class="s-lbl">Recurring pledges</div>
-          <div class="s-val" id="sRec">—</div>
-        </div>
-      </div>
-
-      <!-- Filters -->
-      <div class="filter-bar">
-        <input class="srch" id="srchBox" placeholder="Search by name or phone…" oninput="renderTable()" />
-        <select class="fil-sel" id="typeF" onchange="renderTable()">
-          <option value="">All types</option>
-          <option value="one-time">One-time</option>
-          <option value="recurring">Recurring</option>
-        </select>
-        <select class="fil-sel" id="payF" onchange="renderTable()">
-          <option value="">All payment methods</option>
-          <option>Bank Transfer — GT Bank (3224001020021)</option>
-          <option>Mobile Money — 0245 770 206 (General)</option>
-          <option>Mobile Money — 0245 770 415 (JirehLife)</option>
-          <option>Cash / Offering Box</option>
-        </select>
-      </div>
-
-      <!-- Table -->
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Contact</th>
-              <th>Type</th>
-              <th>Amount (GHS)</th>
-              <th>Period / Duration</th>
-              <th>Payment method</th>
-              <th>Date submitted</th>
-            </tr>
-          </thead>
-          <tbody id="tblBody">
-            <tr><td colspan="8" class="empty">Connect Supabase above, then refresh to load data.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row-count" id="rowCount"></div>
-
     </div>
-  </div>
-</div><!-- /adminPage -->
 
 
-<script>
-/* ─── state ─── */
-let SUPA_URL='', SUPA_KEY='', TOKEN='', allRows=[];
-let pledge='once', freq='weekly';
+    <script>
+        /* ════════════════════════════════════════════════
+           ▶ PASTE YOUR SUPABASE CREDENTIALS HERE
+        ════════════════════════════════════════════════ */
+        const SUPA_URL = 'https://xrngexmggdaaqzuevlaf.supabase.co';   // ← replace
+        const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhybmdleG1nZ2RhYXF6dWV2bGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjMzNjIsImV4cCI6MjA5NTczOTM2Mn0.fLguvVmRdLqOYU0M3BjVWvOffjCp-RXMRLwyCByJNjY';                       // ← replace
+        /* ════════════════════════════════════════════════ */
 
-/* ─── config ─── */
-function saveConfig(){
-  SUPA_URL = document.getElementById('cfgUrl').value.trim().replace(/\/$/,'');
-  SUPA_KEY = document.getElementById('cfgKey').value.trim();
-  const st = document.getElementById('cfgStatus');
-  if(!SUPA_URL || !SUPA_KEY){ st.textContent='Fill both fields'; st.className=''; return; }
-  st.textContent='✓ Connected'; st.className='ok';
-  // persist to session storage so reload doesn't wipe it
-  sessionStorage.setItem('supa_url', SUPA_URL);
-  sessionStorage.setItem('supa_key', SUPA_KEY);
-}
+        let TOKEN = '', allRows = [], pledge = 'once', freq = 'weekly';
 
-function restoreConfig(){
-  const u=sessionStorage.getItem('supa_url'), k=sessionStorage.getItem('supa_key');
-  if(u&&k){
-    document.getElementById('cfgUrl').value=u;
-    document.getElementById('cfgKey').value=k;
-    SUPA_URL=u; SUPA_KEY=k;
-    const st=document.getElementById('cfgStatus');
-    st.textContent='✓ Connected'; st.className='ok';
-  }
-}
+        /* ── routing: show form by default, admin at ?admin ── */
+        function route() {
+            const isAdmin = location.search.includes('admin') || location.hash === '#admin';
+            if (isAdmin) {
+                document.getElementById('formPage').classList.remove('active');
+                document.getElementById('adminPage').classList.add('active');
+            }
+        }
+        route();
 
-/* ─── nav ─── */
-function showPage(p, btn){
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
-  document.getElementById(p+'Page').classList.add('active');
-  btn.classList.add('active');
-}
+        /* ══════════════════
+           FORM
+        ══════════════════ */
+        function selectPledge(t) {
+            pledge = t;
+            document.getElementById('cardOnce').classList.toggle('sel', t === 'once');
+            document.getElementById('cardRec').classList.toggle('sel', t === 'recurring');
+            document.getElementById('cardOnce').querySelector('.pledge-dot').textContent = t === 'once' ? '✓' : '';
+            document.getElementById('cardRec').querySelector('.pledge-dot').textContent = t === 'recurring' ? '✓' : '';
+            document.getElementById('onceFields').style.display = t === 'once' ? '' : 'none';
+            document.getElementById('recFields').style.display = t === 'recurring' ? '' : 'none';
+        }
+        function selectFreq(f) {
+            freq = f;
+            document.getElementById('freqW').classList.toggle('sel', f === 'weekly');
+            document.getElementById('freqM').classList.toggle('sel', f === 'monthly');
+            document.getElementById('freqLabel').textContent = f === 'weekly' ? 'weeks' : 'months';
+        }
+        function toggleConsent() {
+            const cb = document.getElementById('fConsent');
+            cb.checked = !cb.checked;
+            document.getElementById('consentBox').classList.toggle('checked', cb.checked);
+        }
 
-/* ─── form logic ─── */
-function selectPledge(t){
-  pledge=t;
-  document.getElementById('cardOnce').classList.toggle('sel', t==='once');
-  document.getElementById('cardRec').classList.toggle('sel', t==='recurring');
-  document.getElementById('cardOnce').querySelector('.pledge-dot').textContent = t==='once'?'✓':'';
-  document.getElementById('cardRec').querySelector('.pledge-dot').textContent = t==='recurring'?'✓':'';
-  document.getElementById('onceFields').style.display = t==='once'?'':'none';
-  document.getElementById('recFields').style.display = t==='recurring'?'':'none';
-}
+        async function submitForm() {
+            const name = document.getElementById('fname').value.trim();
+            const contact = document.getElementById('fcontact').value.trim();
+            const consent = document.getElementById('fConsent').checked;
+            if (!name || !contact) { alert('Please enter your name and contact number.'); return; }
+            if (!consent) { alert('Please tick the commitment box to proceed.'); return; }
 
-function selectFreq(f){
-  freq=f;
-  document.getElementById('freqW').classList.toggle('sel', f==='weekly');
-  document.getElementById('freqM').classList.toggle('sel', f==='monthly');
-  document.getElementById('freqLabel').textContent = f==='weekly'?'weeks':'months';
-}
+            let amount = 0, period = '', duration = '';
+            if (pledge === 'once') {
+                amount = parseFloat(document.getElementById('onceAmt').value) || 0;
+                if (!amount) { alert('Please enter a gift amount.'); return; }
+            } else {
+                amount = parseFloat(document.getElementById('recAmt').value) || 0;
+                duration = document.getElementById('recDur').value.trim();
+                period = freq;
+                if (!amount || !duration) { alert('Please enter both amount and duration.'); return; }
+            }
 
-function toggleConsent(){
-  const cb=document.getElementById('fConsent');
-  cb.checked=!cb.checked;
-  document.getElementById('consentBox').classList.toggle('checked', cb.checked);
-}
+            const payment = document.getElementById('fpay').value;
+            const payload = {
+                name, contact, pledge_type: pledge, amount,
+                period: period || null, duration: duration || null,
+                payment_method: payment || null, submitted_at: new Date().toISOString()
+            };
 
-async function submitForm(){
-  const name    = document.getElementById('fname').value.trim();
-  const contact = document.getElementById('fcontact').value.trim();
-  const consent = document.getElementById('fConsent').checked;
-  if(!name || !contact){ alert('Please enter your name and contact number.'); return; }
-  if(!consent){ alert('Please tick the commitment box to proceed.'); return; }
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.textContent = 'Submitting…';
 
-  let amount=0, period='', duration='';
-  if(pledge==='once'){
-    amount = parseFloat(document.getElementById('onceAmt').value)||0;
-    if(!amount){ alert('Please enter a gift amount.'); return; }
-  } else {
-    amount   = parseFloat(document.getElementById('recAmt').value)||0;
-    duration = document.getElementById('recDur').value.trim();
-    period   = freq;
-    if(!amount || !duration){ alert('Please enter both amount and duration.'); return; }
-  }
+            try {
+                const res = await fetch(`${SUPA_URL}/rest/v1/commitments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) { const e = await res.text(); throw new Error(e); }
+                document.getElementById('mainForm').style.display = 'none';
+                document.getElementById('successMsg').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (err) {
+                btn.disabled = false; btn.textContent = 'Submit My Commitment ✝';
+                alert('Could not save: ' + err.message);
+            }
+        }
 
-  const payment = document.getElementById('fpay').value;
-  const payload = {
-    name, contact,
-    pledge_type : pledge,
-    amount,
-    period      : period || null,
-    duration    : duration || null,
-    payment_method: payment || null,
-    submitted_at: new Date().toISOString()
-  };
+        function resetForm() {
+            document.getElementById('mainForm').style.display = '';
+            document.getElementById('successMsg').style.display = 'none';
+            ['fname', 'fcontact', 'onceAmt', 'recAmt', 'recDur'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('fpay').value = '';
+            document.getElementById('fConsent').checked = false;
+            document.getElementById('consentBox').classList.remove('checked');
+            selectPledge('once'); selectFreq('weekly');
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = false; btn.textContent = 'Submit My Commitment ✝';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled=true; btn.textContent='Submitting…';
+        /* ══════════════════
+           ADMIN AUTH
+        ══════════════════ */
+        async function doLogin() {
+            const email = document.getElementById('aEmail').value.trim();
+            const pass = document.getElementById('aPass').value;
+            document.getElementById('loginErr').style.display = 'none';
+            try {
+                const res = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY },
+                    body: JSON.stringify({ email, password: pass })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.access_token) throw new Error(data.error_description || data.msg || 'Login failed');
+                TOKEN = data.access_token;
+                document.getElementById('adminLoginScreen').style.display = 'none';
+                document.getElementById('adminDash').style.display = 'flex';
+                // set share URL = current page WITHOUT ?admin
+                const base = location.origin + location.pathname;
+                document.getElementById('shareUrl').textContent = base;
+                loadRows();
+            } catch (err) {
+                const el = document.getElementById('loginErr');
+                el.textContent = err.message; el.style.display = 'block';
+            }
+        }
 
-  if(SUPA_URL && SUPA_KEY){
-    try{
-      const res = await fetch(`${SUPA_URL}/rest/v1/commitments`,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'apikey': SUPA_KEY,
-          'Authorization': 'Bearer '+SUPA_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(payload)
-      });
-      if(!res.ok){ const e=await res.text(); throw new Error(e); }
-    } catch(err){
-      btn.disabled=false; btn.textContent='Submit My Commitment ✝';
-      alert('Could not save: '+err.message+'\n\nCheck your Supabase config at the top.');
-      return;
-    }
-  } else {
-    // demo mode — just simulate delay
-    await new Promise(r=>setTimeout(r,700));
-  }
+        function doLogout() {
+            TOKEN = '';
+            document.getElementById('adminLoginScreen').style.display = 'flex';
+            document.getElementById('adminDash').style.display = 'none';
+            document.getElementById('aEmail').value = '';
+            document.getElementById('aPass').value = '';
+            allRows = [];
+        }
 
-  document.getElementById('mainForm').style.display='none';
-  document.getElementById('successMsg').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+        /* ══════════════════
+           DATA
+        ══════════════════ */
+        async function loadRows() {
+            try {
+                const res = await fetch(`${SUPA_URL}/rest/v1/commitments?order=submitted_at.desc`, {
+                    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + TOKEN }
+                });
+                if (!res.ok) throw new Error(await res.text());
+                allRows = await res.json();
+                updateStats(); renderTable();
+            } catch (err) {
+                document.getElementById('tblBody').innerHTML = `<tr><td colspan="8" class="empty">Error: ${esc(err.message)}</td></tr>`;
+            }
+        }
 
-function resetForm(){
-  document.getElementById('mainForm').style.display='';
-  document.getElementById('successMsg').style.display='none';
-  ['fname','fcontact','onceAmt','recAmt','recDur'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fpay').value='';
-  document.getElementById('fConsent').checked=false;
-  document.getElementById('consentBox').classList.remove('checked');
-  selectPledge('once'); selectFreq('weekly');
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=false; btn.textContent='Submit My Commitment ✝';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+        function updateStats() {
+            const tot = allRows.length;
+            const once = allRows.filter(r => r.pledge_type === 'once').length;
+            const rec = allRows.filter(r => r.pledge_type === 'recurring').length;
+            const total = allRows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+            document.getElementById('sTot').textContent = tot;
+            document.getElementById('sAmt').textContent = fmt(total);
+            document.getElementById('sOnce').textContent = once;
+            document.getElementById('sRec').textContent = rec;
+        }
 
-/* ─── admin login / logout ─── */
-async function doLogin(){
-  const email = document.getElementById('aEmail').value.trim();
-  const pass  = document.getElementById('aPass').value;
-  document.getElementById('loginErr').style.display='none';
-  if(!SUPA_URL||!SUPA_KEY){ alert('Please configure Supabase credentials in the bar at the top first.'); return; }
-  try{
-    const res  = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
-      body: JSON.stringify({email, password:pass})
-    });
-    const data = await res.json();
-    if(!res.ok || !data.access_token) throw new Error(data.error_description || data.msg || 'Login failed');
-    TOKEN = data.access_token;
-    document.getElementById('adminLogin').style.display='none';
-    document.getElementById('adminDash').style.display='';
-    document.getElementById('shareUrl').textContent = window.location.href.split('#')[0];
-    loadRows();
-  } catch(err){
-    const el=document.getElementById('loginErr');
-    el.textContent=err.message; el.style.display='block';
-  }
-}
-
-function doLogout(){
-  TOKEN='';
-  document.getElementById('adminLogin').style.display='';
-  document.getElementById('adminDash').style.display='none';
-  document.getElementById('aEmail').value='';
-  document.getElementById('aPass').value='';
-  allRows=[];
-}
-
-/* ─── data ─── */
-async function loadRows(){
-  if(!SUPA_URL||!SUPA_KEY){
-    document.getElementById('tblBody').innerHTML='<tr><td colspan="8" class="empty">Configure Supabase credentials above, then refresh.</td></tr>';
-    return;
-  }
-  try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/commitments?order=submitted_at.desc`,{
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(TOKEN||SUPA_KEY)}
-    });
-    if(!res.ok) throw new Error(await res.text());
-    allRows = await res.json();
-    updateStats(); renderTable();
-  } catch(err){
-    document.getElementById('tblBody').innerHTML=`<tr><td colspan="8" class="empty">Error loading data: ${esc(err.message)}</td></tr>`;
-  }
-}
-
-function updateStats(){
-  const tot   = allRows.length;
-  const once  = allRows.filter(r=>r.pledge_type==='once').length;
-  const rec   = allRows.filter(r=>r.pledge_type==='recurring').length;
-  const total = allRows.reduce((s,r)=>s+(parseFloat(r.amount)||0),0);
-  document.getElementById('sTot').textContent  = tot;
-  document.getElementById('sAmt').textContent  = fmt(total);
-  document.getElementById('sOnce').textContent = once;
-  document.getElementById('sRec').textContent  = rec;
-}
-
-function renderTable(){
-  const q  = (document.getElementById('srchBox').value||'').toLowerCase();
-  const tf = document.getElementById('typeF').value;
-  const pf = document.getElementById('payF').value;
-
-  const rows = allRows.filter(r=>{
-    if(q && !(r.name||'').toLowerCase().includes(q) && !(r.contact||'').includes(q)) return false;
-    if(tf && r.pledge_type!==tf) return false;
-    if(pf && r.payment_method!==pf) return false;
-    return true;
-  });
-
-  if(!rows.length){
-    document.getElementById('tblBody').innerHTML='<tr><td colspan="8" class="empty">No matching records.</td></tr>';
-    document.getElementById('rowCount').textContent='';
-    return;
-  }
-  document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${allRows.length} records`;
-  document.getElementById('tblBody').innerHTML = rows.map((r,i)=>{
-    const d   = r.submitted_at ? new Date(r.submitted_at).toLocaleDateString('en-GH',{day:'numeric',month:'short',year:'numeric'}) : '—';
-    const per = r.pledge_type==='recurring' ? `${r.period||''} × ${r.duration||'?'}` : '—';
-    const badge = r.pledge_type==='recurring'
-      ? `<span class="badge badge-rec">Recurring</span>`
-      : `<span class="badge badge-once">One-time</span>`;
-    return `<tr>
-      <td style="color:var(--gray-400)">${i+1}</td>
-      <td style="font-weight:600">${esc(r.name||'—')}</td>
-      <td>${esc(r.contact||'—')}</td>
+        function renderTable() {
+            const q = (document.getElementById('srchBox').value || '').toLowerCase();
+            const tf = document.getElementById('typeF').value;
+            const pf = document.getElementById('payF').value;
+            const rows = allRows.filter(r => {
+                if (q && !(r.name || '').toLowerCase().includes(q) && !(r.contact || '').includes(q)) return false;
+                if (tf && r.pledge_type !== tf) return false;
+                if (pf && r.payment_method !== pf) return false;
+                return true;
+            });
+            if (!rows.length) {
+                document.getElementById('tblBody').innerHTML = '<tr><td colspan="8" class="empty">No matching records.</td></tr>';
+                document.getElementById('rowCount').textContent = ''; return;
+            }
+            document.getElementById('rowCount').textContent = `Showing ${rows.length} of ${allRows.length} records`;
+            document.getElementById('tblBody').innerHTML = rows.map((r, i) => {
+                const d = r.submitted_at ? new Date(r.submitted_at).toLocaleDateString('en-GH', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                const per = r.pledge_type === 'recurring' ? `${r.period || ''} × ${r.duration || '?'}` : '—';
+                const badge = r.pledge_type === 'recurring'
+                    ? `<span class="badge badge-rec">Recurring</span>`
+                    : `<span class="badge badge-once">One-time</span>`;
+                return `<tr>
+      <td style="color:var(--gray-400)">${i + 1}</td>
+      <td style="font-weight:600">${esc(r.name || '—')}</td>
+      <td>${esc(r.contact || '—')}</td>
       <td>${badge}</td>
-      <td style="font-weight:600">GHS ${fmt(r.amount||0)}</td>
+      <td style="font-weight:600">GHS ${fmt(r.amount || 0)}</td>
       <td style="color:var(--gray-400)">${esc(per)}</td>
-      <td style="color:var(--gray-400);font-size:.78rem">${esc(r.payment_method||'—')}</td>
+      <td style="color:var(--gray-400);font-size:.78rem">${esc(r.payment_method || '—')}</td>
       <td style="color:var(--gray-400)">${d}</td>
     </tr>`;
-  }).join('');
-}
+            }).join('');
+        }
 
-/* ─── export CSV ─── */
-function exportCSV(){
-  if(!allRows.length){ alert('No data to export.'); return; }
-  const cols=['name','contact','pledge_type','amount','period','duration','payment_method','submitted_at'];
-  const hdr=cols.join(',');
-  const body=allRows.map(r=>cols.map(c=>JSON.stringify(r[c]??'')).join(',')).join('\n');
-  const blob=new Blob([hdr+'\n'+body],{type:'text/csv'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='jirehlife_commitments_'+new Date().toISOString().slice(0,10)+'.csv';
-  a.click();
-}
+        /* ══════════════════
+           SHARE / QR
+        ══════════════════ */
+        function copyLink() {
+            const url = document.getElementById('shareUrl').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.querySelector('.sc-btn.copy');
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy link', 2000);
+            });
+        }
 
-/* ─── share link ─── */
-function copyLink(){
-  const url=document.getElementById('shareUrl').textContent;
-  navigator.clipboard.writeText(url).then(()=>{
-    const btn=document.querySelector('.copy-btn');
-    btn.textContent='Copied!';
-    setTimeout(()=>btn.textContent='Copy link',2000);
-  });
-}
+        /* tiny QR generator (no external lib needed) using Google Charts API */
+        function showQR() {
+            const url = document.getElementById('shareUrl').textContent;
+            const canvas = document.getElementById('qrCanvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            const encoded = encodeURIComponent(url);
+            img.crossOrigin = 'anonymous';
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}&bgcolor=ffffff&color=0d0d0d&qzone=1`;
+            img.onload = () => { ctx.clearRect(0, 0, 220, 220); ctx.drawImage(img, 0, 0, 220, 220); };
+            img.onerror = () => { ctx.fillStyle = '#eee'; ctx.fillRect(0, 0, 220, 220); ctx.fillStyle = '#999'; ctx.font = '13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('QR unavailable', 110, 110); };
+            document.getElementById('qrOverlay').classList.add('open');
+        }
+        function closeQR(e) { if (e.target === document.getElementById('qrOverlay')) closeQRBtn(); }
+        function closeQRBtn() { document.getElementById('qrOverlay').classList.remove('open'); }
 
-/* ─── helpers ─── */
-function fmt(n){ return parseFloat(n).toLocaleString('en-GH',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        /* ══════════════════
+           EXPORT
+        ══════════════════ */
+        function exportCSV() {
+            if (!allRows.length) { alert('No data to export.'); return; }
+            const cols = ['name', 'contact', 'pledge_type', 'amount', 'period', 'duration', 'payment_method', 'submitted_at'];
+            const hdr = cols.join(',');
+            const body = allRows.map(r => cols.map(c => JSON.stringify(r[c] ?? '')).join(',')).join('\n');
+            const blob = new Blob([hdr + '\n' + body], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'jirehlife_commitments_' + new Date().toISOString().slice(0, 10) + '.csv';
+            a.click();
+        }
 
-/* ─── init ─── */
-restoreConfig();
-</script>
+        /* ══════════════════
+           HELPERS
+        ══════════════════ */
+        function fmt(n) { return parseFloat(n).toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+        function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    </script>
 </body>
+
 </html>
