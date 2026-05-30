@@ -1547,6 +1547,7 @@
             }
         }
         route();
+        restoreSession();
 
         /* ══════════════════
            FORM
@@ -1638,6 +1639,7 @@
                 const data = await res.json();
                 if (!res.ok || !data.access_token) throw new Error(data.error_description || data.msg || 'Login failed');
                 TOKEN = data.access_token;
+                localStorage.setItem('jlc_token', data.access_token);
                 document.getElementById('adminLoginScreen').style.display = 'none';
                 document.getElementById('adminDash').style.display = 'flex';
                 // set share URL = current page WITHOUT ?admin
@@ -1650,8 +1652,22 @@
             }
         }
 
+        function restoreSession() {
+            const saved = localStorage.getItem('jlc_token');
+            if (!saved) return;
+            const isAdmin = location.search.includes('admin') || location.hash === '#admin';
+            if (!isAdmin) return;
+            TOKEN = saved;
+            document.getElementById('adminLoginScreen').style.display = 'none';
+            document.getElementById('adminDash').style.display = 'flex';
+            const base = location.origin + location.pathname;
+            document.getElementById('shareUrl').textContent = base;
+            loadRows();
+        }
+
         function doLogout() {
             TOKEN = '';
+            localStorage.removeItem('jlc_token');
             document.getElementById('adminLoginScreen').style.display = 'flex';
             document.getElementById('adminDash').style.display = 'none';
             document.getElementById('aEmail').value = '';
