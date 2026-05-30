@@ -320,6 +320,7 @@
             font-size: .8rem
         }
 
+        /* consent — label wraps everything so native checkbox works perfectly */
         .consent {
             display: flex;
             gap: .75rem;
@@ -329,26 +330,52 @@
             border-radius: 9px;
             margin-bottom: 1.5rem;
             cursor: pointer;
-            transition: border-color .2s;
-            background: var(--white)
+            transition: border-color .2s, background .2s;
+            background: var(--white);
+            user-select: none
         }
 
         .consent:hover {
             border-color: var(--gray-400)
         }
 
-        .consent.checked {
+        .consent:has(input:checked) {
             border-color: var(--black);
             background: var(--off-white)
         }
 
+        /* custom checkbox visuals */
         .consent input[type=checkbox] {
-            width: 17px;
-            height: 17px;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
             margin-top: 2px;
-            accent-color: var(--black);
-            cursor: pointer
+            border: 1.5px solid var(--gray-200);
+            border-radius: 4px;
+            background: var(--white);
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+        }
+
+        .consent input[type=checkbox]:checked {
+            background: var(--black);
+            border-color: var(--black);
+        }
+
+        .consent input[type=checkbox]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 5px;
+            height: 9px;
+            border: 2px solid var(--white);
+            border-top: none;
+            border-left: none;
+            transform: rotate(45deg);
         }
 
         .consent span {
@@ -1015,6 +1042,89 @@
             text-align: right
         }
 
+        /* ── CUSTOM TOAST / ALERT MODAL ── */
+        .toast-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .toast-overlay.open {
+            display: flex;
+            animation: fadeUp .2s ease
+        }
+
+        .toast-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.75rem 1.5rem;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+        }
+
+        .toast-icon {
+            font-size: 1.8rem;
+            margin-bottom: .75rem;
+            display: block
+        }
+
+        .toast-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: .4rem
+        }
+
+        .toast-msg {
+            font-size: .84rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 1.25rem
+        }
+
+        .toast-btns {
+            display: flex;
+            gap: .5rem;
+            justify-content: center
+        }
+
+        .toast-btn {
+            padding: .65rem 1.5rem;
+            border-radius: 7px;
+            font-family: var(--font-body);
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+        }
+
+        .toast-btn.primary {
+            background: var(--black);
+            color: var(--white)
+        }
+
+        .toast-btn.primary:hover {
+            opacity: .85
+        }
+
+        .toast-btn.secondary {
+            background: var(--off-white);
+            color: var(--black);
+            border: 1px solid var(--gray-200)
+        }
+
+        .toast-btn.secondary:hover {
+            border-color: var(--black)
+        }
+
         @media(max-width:640px) {
             .stats {
                 grid-template-columns: 1fr 1fr
@@ -1147,11 +1257,11 @@
                     </div>
                 </div>
 
-                <div class="consent" id="consentBox" onclick="toggleConsent()">
+                <label class="consent" id="consentBox">
                     <input type="checkbox" id="fConsent" />
                     <span>I have a willing heart and commit to participate in <strong>"The Rich Church"</strong>
                         building campaign. I understand this is a faith commitment to God and to this church.</span>
-                </div>
+                </label>
 
                 <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit My Commitment &nbsp;✝</button>
                 <div class="form-footer">
@@ -1325,12 +1435,54 @@
     </div>
 
 
+    <!-- CUSTOM ALERT / CONFIRM MODAL -->
+    <div class="toast-overlay" id="toastOverlay">
+        <div class="toast-box">
+            <span class="toast-icon" id="toastIcon">⚠️</span>
+            <div class="toast-title" id="toastTitle">Notice</div>
+            <div class="toast-msg" id="toastMsg"></div>
+            <div class="toast-btns" id="toastBtns"></div>
+        </div>
+    </div>
+
     <script>
-        /* ════════════════════════════════════════════════
-           ▶ PASTE YOUR SUPABASE CREDENTIALS HERE
-        ════════════════════════════════════════════════ */
+        /* ══════════════════
+           CUSTOM MODAL (replaces alert / confirm)
+        ══════════════════ */
+        let _toastResolve = null;
+
+        function showAlert(msg, title = 'Notice', icon = 'ℹ️') {
+            return new Promise(resolve => {
+                _toastResolve = resolve;
+                document.getElementById('toastIcon').textContent = icon;
+                document.getElementById('toastTitle').textContent = title;
+                document.getElementById('toastMsg').textContent = msg;
+                document.getElementById('toastBtns').innerHTML =
+                    `<button class="toast-btn primary" onclick="closeToast(true)">OK</button>`;
+                document.getElementById('toastOverlay').classList.add('open');
+            });
+        }
+
+        function showConfirm(msg, title = 'Are you sure?', icon = '🗑️') {
+            return new Promise(resolve => {
+                _toastResolve = resolve;
+                document.getElementById('toastIcon').textContent = icon;
+                document.getElementById('toastTitle').textContent = title;
+                document.getElementById('toastMsg').textContent = msg;
+                document.getElementById('toastBtns').innerHTML =
+                    `<button class="toast-btn secondary" onclick="closeToast(false)">Cancel</button>
+       <button class="toast-btn primary" onclick="closeToast(true)">Delete</button>`;
+                document.getElementById('toastOverlay').classList.add('open');
+            });
+        }
+
+        function closeToast(result) {
+            document.getElementById('toastOverlay').classList.remove('open');
+            if (_toastResolve) { _toastResolve(result); _toastResolve = null; }
+        }
         const SUPA_URL = 'https://xrngexmggdaaqzuevlaf.supabase.co';   // ← replace
         const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhybmdleG1nZ2RhYXF6dWV2bGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjMzNjIsImV4cCI6MjA5NTczOTM2Mn0.fLguvVmRdLqOYU0M3BjVWvOffjCp-RXMRLwyCByJNjY';
+
         /* ════════════════════════════════════════════════ */
 
         let TOKEN = '', allRows = [], pledge = 'once', freq = 'weekly';
@@ -1363,28 +1515,22 @@
             document.getElementById('freqM').classList.toggle('sel', f === 'monthly');
             document.getElementById('freqLabel').textContent = f === 'weekly' ? 'weeks' : 'months';
         }
-        function toggleConsent() {
-            const cb = document.getElementById('fConsent');
-            cb.checked = !cb.checked;
-            document.getElementById('consentBox').classList.toggle('checked', cb.checked);
-        }
-
         async function submitForm() {
             const name = document.getElementById('fname').value.trim();
             const contact = document.getElementById('fcontact').value.trim();
             const consent = document.getElementById('fConsent').checked;
-            if (!name || !contact) { alert('Please enter your name and contact number.'); return; }
-            if (!consent) { alert('Please tick the commitment box to proceed.'); return; }
+            if (!name || !contact) { await showAlert('Please enter your name and contact number.', 'Missing details', '👤'); return; }
+            if (!consent) { await showAlert('Please tick the commitment box to proceed.', 'Commitment required', '✝'); return; }
 
             let amount = 0, period = '', duration = '';
             if (pledge === 'once') {
                 amount = parseFloat(document.getElementById('onceAmt').value) || 0;
-                if (!amount) { alert('Please enter a gift amount.'); return; }
+                if (!amount) { await showAlert('Please enter a gift amount.', 'Amount required', '💰'); return; }
             } else {
                 amount = parseFloat(document.getElementById('recAmt').value) || 0;
                 duration = document.getElementById('recDur').value.trim();
                 period = freq;
-                if (!amount || !duration) { alert('Please enter both amount and duration.'); return; }
+                if (!amount || !duration) { await showAlert('Please enter both amount and duration.', 'Fields required', '💰'); return; }
             }
 
             const payment = document.getElementById('fpay').value;
@@ -1409,7 +1555,7 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } catch (err) {
                 btn.disabled = false; btn.textContent = 'Submit My Commitment ✝';
-                alert('Could not save: ' + err.message);
+                await showAlert('Could not save your commitment. Please check your connection and try again.', 'Submission failed', '❌');
             }
         }
 
@@ -1419,7 +1565,6 @@
             ['fname', 'fcontact', 'onceAmt', 'recAmt', 'recDur'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('fpay').value = '';
             document.getElementById('fConsent').checked = false;
-            document.getElementById('consentBox').classList.remove('checked');
             selectPledge('once'); selectFreq('weekly');
             const btn = document.getElementById('submitBtn');
             btn.disabled = false; btn.textContent = 'Submit My Commitment ✝';
@@ -1567,7 +1712,8 @@
            DELETE PLEDGE
         ══════════════════ */
         async function deleteRow(id, name) {
-            if (!confirm(`Delete the commitment from "${name}"?\n\nThis cannot be undone.`)) return;
+            const ok = await showConfirm(`This will permanently remove the commitment from "${name}". This cannot be undone.`, 'Delete commitment?', '🗑️');
+            if (!ok) return;
             try {
                 const res = await fetch(`${SUPA_URL}/rest/v1/commitments?id=eq.${id}`, {
                     method: 'DELETE',
@@ -1577,7 +1723,7 @@
                 allRows = allRows.filter(r => r.id !== id);
                 updateStats(); renderTable();
             } catch (err) {
-                alert('Could not delete: ' + err.message);
+                await showAlert('Could not delete: ' + err.message, 'Error', '❌');
             }
         }
 
@@ -1623,7 +1769,7 @@
            EXPORT
         ══════════════════ */
         function exportCSV() {
-            if (!allRows.length) { alert('No data to export.'); return; }
+            if (!allRows.length) { showAlert('No data to export yet.', 'Nothing to export', '📭'); return; }
             const cols = ['name', 'contact', 'pledge_type', 'amount', 'period', 'duration', 'payment_method', 'submitted_at'];
             const hdr = cols.join(',');
             const body = allRows.map(r => cols.map(c => JSON.stringify(r[c] ?? '')).join(',')).join('\n');
